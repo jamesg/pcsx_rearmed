@@ -504,6 +504,7 @@ int main(int argc, char *argv[])
 	char path[MAXPATHLEN];
 	const char *cdfile = NULL;
 	const char *loadst_f = NULL;
+	int fullscreen = 0;
 	int psxout = 0;
 	int loadst = 0;
 	int i;
@@ -512,7 +513,8 @@ int main(int argc, char *argv[])
 
 	// read command line options
 	for (i = 1; i < argc; i++) {
-		     if (!strcmp(argv[i], "-psxout")) psxout = 1;
+		     if (!strcmp(argv[i], "-fullscreen")) fullscreen = 1;
+		else if (!strcmp(argv[i], "-psxout")) psxout = 1;
 		else if (!strcmp(argv[i], "-load")) loadst = atol(argv[++i]);
 		else if (!strcmp(argv[i], "-cfg")) {
 			if (i+1 >= argc) break;
@@ -549,6 +551,7 @@ int main(int argc, char *argv[])
 							"\toptions:\n"
 							"\t-cdfile FILE\tRuns a CD image file\n"
 							"\t-cfg FILE\tLoads desired configuration file (default: ~/.pcsx/pcsx.cfg)\n"
+							"\t-fullscreen\t\tStart in fullscreen mode\n"
 							"\t-psxout\t\tEnable PSX output\n"
 							"\t-load STATENUM\tLoads savestate STATENUM (1-5)\n"
 							"\t-h -help\tDisplay this message\n"
@@ -581,6 +584,9 @@ int main(int argc, char *argv[])
 
 	if (emu_core_init() != 0)
 		return 1;
+
+	if (fullscreen)
+		plat_target.vout_fullscreen = 1;
 
 	if (psxout)
 		Config.PsxOut = 1;
